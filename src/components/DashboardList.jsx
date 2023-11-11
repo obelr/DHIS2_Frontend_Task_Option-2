@@ -1,40 +1,31 @@
-// src/components/DashboardList.jsx
-import React, { useState, useEffect } from 'react';
+// components/dashboard/DashboardList.jsx
+import React, { useEffect } from 'react';
 import DashboardCard from './DashboardCard';
+import { useDashboardContext, actionTypes } from '../context/DashboardContext';
 
 const DashboardList = () => {
-  const [dashboards, setDashboards] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [expandedDashboard, setExpandedDashboard] = useState(null);
-  const [filterType, setFilterType] = useState("all");
+  const { state, dispatch } = useDashboardContext();
+  const { dashboards, loading, error, expandedDashboard, filterType } = state;
 
   useEffect(() => {
-    const fetchDashboards = async () => {
+    const fetchDashboardData = async () => {
       try {
-        const response = await fetch(
-          'https://gist.githubusercontent.com/kabaros/da79636249e10a7c991a4638205b1726/raw/fa044f54e7a5493b06bb51da40ecc3a9cb4cd3a5/dashboards.json'
-        );
-        const data = await response.json();
-        setDashboards(data.dashboards);
-        setLoading(false);
-        // Set the first dashboard as expanded by default
-        setExpandedDashboard(data.dashboards[0].id);
+        dispatch({ type: actionTypes.SET_LOADING, payload: true });
+        const dashboardsData = await fetchDashboards();
+        dispatch({ type: actionTypes.SET_DASHBOARDS, payload: dashboardsData });
+        dispatch({ type: actionTypes.SET_EXPANDED_DASHBOARD, payload: dashboardsData[0]?.id });
+        dispatch({ type: actionTypes.SET_LOADING, payload: false });
       } catch (error) {
-        setError('Error fetching dashboards');
-        setLoading(false);
+        dispatch({ type: actionTypes.SET_ERROR, payload: 'Error fetching dashboards' });
+        dispatch({ type: actionTypes.SET_LOADING, payload: false });
       }
     };
 
-    fetchDashboards();
-  }, []);
-
-  const handleCardClick = (dashboardId) => {
-    setExpandedDashboard(dashboardId);
-  };
+    fetchDashboardData();
+  }, [dispatch]);
 
   const handleFilterChange = (event) => {
-    setFilterType(event.target.value);
+    dispatch({ type: actionTypes.SET_FILTER_TYPE, payload: event.target.value });
   };
 
   if (loading) {
@@ -65,8 +56,6 @@ const DashboardList = () => {
             key={dashboard.id}
             dashboard={dashboard}
             isExpanded={dashboard.id === expandedDashboard}
-            onCardClick={handleCardClick}
-            filterType={filterType}
           />
         ))}
       </ul>

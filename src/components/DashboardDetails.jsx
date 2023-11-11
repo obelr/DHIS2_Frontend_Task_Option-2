@@ -1,7 +1,11 @@
+// components/dashboard/DashboardDetails.jsx
 import React, { useMemo } from 'react';
+import { useDashboardContext } from '../context/DashboardContext';
 
-const DashboardDetails = ({ dashboard, filterType }) => {
-  // Helper function to get the appropriate icon based on item type
+const DashboardDetails = ({ dashboard }) => {
+  const { state } = useDashboardContext();
+  const { filterType } = state;
+
   const getIcon = (item) => {
     switch (item.type) {
       case 'VISUALIZATION':
@@ -10,13 +14,11 @@ const DashboardDetails = ({ dashboard, filterType }) => {
         return '🗺️';
       case 'TEXT':
         return '📝';
-      // Add other types as needed
       default:
         return '';
     }
   };
 
-  // Helper function to get the item name or text for text types
   const getItemName = (item) => {
     if (item.visualization) {
       return item.visualization.name;
@@ -29,19 +31,16 @@ const DashboardDetails = ({ dashboard, filterType }) => {
     }
   };
 
-  // Use useMemo to memoize the filteredDashboardItems
   const filteredDashboardItems = useMemo(() => {
     return dashboard.dashboardItems.filter((item) => {
       if (filterType === 'all') {
         return true;
       }
 
-      // Check if the item has a type property and it matches the filter
       if (item.type && item.type === filterType) {
         return true;
       }
 
-      // Check if the item has nested types (visualization, map) and one of them matches the filter
       if (item.visualization && item.visualization.type === filterType) {
         return true;
       }
@@ -49,8 +48,6 @@ const DashboardDetails = ({ dashboard, filterType }) => {
       if (item.map && item.map.type === filterType) {
         return true;
       }
-
-      // Add similar checks for other types if needed
 
       return false;
     });
