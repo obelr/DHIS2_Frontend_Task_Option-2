@@ -4,8 +4,17 @@ export const fetchDashboards = async () => {
   try {
     const response = await fetch(`${BASE_URL}/dashboards.json`);
     const data = await response.json();
+    
+    console.log('Dashboard API Response:', data);
+
+    if (!data || !data.dashboards || !Array.isArray(data.dashboards)) {
+      console.error('Invalid response format:', data);
+      throw new Error('Invalid response format');
+    }
+
     return data.dashboards;
   } catch (error) {
+    console.error('Error fetching dashboards', error);
     throw new Error('Error fetching dashboards');
   }
 };
@@ -16,6 +25,7 @@ export const fetchDashboardDetails = async (dashboardId) => {
     const data = await response.json();
     return data;
   } catch (error) {
+    console.error('Error fetching dashboard details', error);
     throw new Error('Error fetching dashboard details');
   }
 };

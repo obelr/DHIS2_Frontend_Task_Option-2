@@ -1,21 +1,22 @@
-// components/dashboard/DashboardDetails.jsx
-import React, { useMemo } from 'react';
-import { useDashboardContext } from '../context/DashboardContext';
+import React, { useMemo, memo } from "react";
+import { useDashboardContext } from "../context/DashboardContext";
+import { AiOutlineBarChart } from "react-icons/ai";
+import { BsMap, BsFillChatRightTextFill } from "react-icons/bs";
 
-const DashboardDetails = ({ dashboard }) => {
+const DashboardDetails = memo(({ dashboard }) => {
   const { state } = useDashboardContext();
   const { filterType } = state;
 
   const getIcon = (item) => {
     switch (item.type) {
-      case 'VISUALIZATION':
-        return '📊';
-      case 'MAP':
-        return '🗺️';
-      case 'TEXT':
-        return '📝';
+      case "VISUALIZATION":
+        return <AiOutlineBarChart />;
+      case "MAP":
+        return <BsMap />;
+      case "TEXT":
+        return <BsFillChatRightTextFill />;
       default:
-        return '';
+        return "";
     }
   };
 
@@ -24,16 +25,16 @@ const DashboardDetails = ({ dashboard }) => {
       return item.visualization.name;
     } else if (item.map) {
       return item.map.name;
-    } else if (item.text) {
-      return item.text;
+      // } else if (item.text) {
+      //   return item.text;
     } else {
-      return 'Unknown Item';
+      return "Unknown Item";
     }
   };
 
   const filteredDashboardItems = useMemo(() => {
     return dashboard.dashboardItems.filter((item) => {
-      if (filterType === 'all') {
+      if (filterType === "all") {
         return true;
       }
 
@@ -55,10 +56,9 @@ const DashboardDetails = ({ dashboard }) => {
 
   return (
     <div className="mt-4">
-      <h3 className="text-xl font-semibold mb-2">{dashboard.displayName} Items</h3>
       <ul>
         {filteredDashboardItems.map((item) => (
-          <li key={item.id} className="mb-2">
+          <li key={item.id} className="mb-1 flex items-center">
             {getIcon(item)}
             <span className="ml-2">{getItemName(item)}</span>
           </li>
@@ -66,6 +66,6 @@ const DashboardDetails = ({ dashboard }) => {
       </ul>
     </div>
   );
-};
+});
 
 export default DashboardDetails;
