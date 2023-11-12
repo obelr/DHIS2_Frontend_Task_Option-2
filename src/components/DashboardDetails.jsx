@@ -1,7 +1,7 @@
 import React, { useMemo, memo } from "react";
 import { useDashboardContext } from "../context/DashboardContext";
-import { AiOutlineBarChart } from 'react-icons/ai';
-import { BsMap, BsFillChatRightTextFill } from 'react-icons/bs';
+import { AiOutlineBarChart } from '/node_modules/react-icons/ai';
+import { BsMap, BsFillChatRightTextFill } from '/node_modules/react-icons/bs';
 
 const DashboardDetails = memo(({ dashboard }) => {
   const { state } = useDashboardContext();
