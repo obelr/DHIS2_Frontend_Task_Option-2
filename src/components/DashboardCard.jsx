@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, memo } from "react";
 import DashboardDetails from "./DashboardDetails";
 import { useDashboardContext, actionTypes } from "../context/DashboardContext";
 import { fetchDashboardDetails } from "../utils/api";
-import { FaStar, FaRegStar } from "react-icons/fa";
+import { FaStar, FaRegStar } from 'react-icons/fa';
 
 const DashboardCard = memo(({ dashboard, isExpanded }) => {
   const { state, dispatch } = useDashboardContext();
